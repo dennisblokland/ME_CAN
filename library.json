@@ -1,0 +1,21 @@
+{
+    "name": "ME_CAN",
+    "version": "0.0.1",
+    "description": "Motorsport Electronics CAN decoding library for arduino",
+    "keywords": "can, Motorsport Electronics, decode",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/dennisblokland/ME_CAN.git"
+    },
+    "authors":
+    [
+      {
+        "name": "Dennis Blokland",
+        "maintainer": true
+      }
+    ],
+    "license": "MIT",
+    "frameworks": "arduino",
+    "platforms": "*"
+  }
