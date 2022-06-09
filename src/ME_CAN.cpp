@@ -2,11 +2,6 @@
 #include "ME_CAN.h"
 #include <assert.h>
 
-ME_CAN::ME_CAN()
-{
-}
-
-
 int ME_CAN::unpack_can_0x300_ME1_1(byte data[], uint8_t dlc) {
 	
 	assert(dlc <= 8);
@@ -14,13 +9,13 @@ int ME_CAN::unpack_can_0x300_ME1_1(byte data[], uint8_t dlc) {
 		return -1;
 	
 	/* RPM: start-bit 0, length 16, endianess intel, scaling 1, offset 0 */
-	RPM = (data[0] << 8) + (data[1] & 0xff);
+	RPM.SetValue((data[0] << 8) + (data[1] & 0xff));
 	/* TPS: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
-	TPS = (data[2] << 8) + (data[3] & 0xff);
+	TPS.SetValue(((data[2] << 8) + (data[3] & 0xff)) / 10.0);
 	/* MAP: start-bit 32, length 16, endianess intel, scaling 0.01, offset 0 */
-	MAP = (data[4] << 8) + (data[5] & 0xff);
+	MAP.SetValue(((data[4] << 8) + (data[5] & 0xff)) / 100.0);
 	/* IAT: start-bit 48, length 16, endianess intel, scaling 0.1, offset 0 */
-	IAT = (data[6] << 8) + (data[7] & 0xff);
+	IAT.SetValue(((data[6] << 8) + (data[7] & 0xff)) / 10.0);
 	return 0;
 }
 
@@ -31,17 +26,17 @@ int ME_CAN::unpack_can_0x301_ME1_2(byte data[], uint8_t dlc) {
 	if (dlc < 8)
 		return -1;
 	/* RPM_HardLimit: start-bit 0, length 16, endianess intel, scaling 0.4, offset 0 */
-	RPM_HardLimit = (data[0] << 8) + (data[1] & 0xff);
+	RPM_HardLimit.SetValue(((data[0] << 8) + (data[1] & 0xff)) * 0.4);
 	/* Lambda_Trim: start-bit 32, length 16, endianess intel, scaling 0.01, offset 0 */
-	Lambda_Trim =  (data[5] << 8) + (data[6] & 0xff);
+	Lambda_Trim.SetValue(((data[5] << 8) + (data[6] & 0xff)) / 100.0);
 	/* AFRCurr_1: start-bit 16, length 8, endianess intel, scaling 0.05, offset 7.5 */
-	AFRCurr_1 = data[2] & 0xff;
+	AFRCurr_1.SetValue((data[2] & 0xff) * 0.05 + 7.5);
 	/* AFRCurr_2: start-bit 24, length 8, endianess intel, scaling 0.05, offset 7.5 */
-	AFRCurr_2 = data[3] & 0xff;
+	AFRCurr_2.SetValue((data[3] & 0xff) * 0.05 + 7.5);
 	/* AFR_Target: start-bit 48, length 8, endianess intel, scaling 0.05, offset 7.5 */
-	AFR_Target = data[4] & 0xff;
+	AFR_Target.SetValue((data[4] & 0xff) * 0.05 + 7.5);
 	/* Fuel_Eth_Perc: start-bit 56, length 8, endianess intel, scaling 0.5, offset 0 */
-	Fuel_Eth_Perc = data[7] & 0xff;
+	Fuel_Eth_Perc.SetValue((data[7] & 0xff) * 0.5);
 	return 0;
 }
 
@@ -51,13 +46,13 @@ int ME_CAN::unpack_can_0x302_ME1_3(byte data[], uint8_t dlc) {
 	if (dlc < 8)
 		return -1;
 	/* IgnAdvAngle: start-bit 0, length 16, endianess intel, scaling 0.1, offset 0 */
-	IgnAdvAngle = (data[0] << 8) + (data[1] & 0xff);
+	IgnAdvAngle.SetValue(((data[0] << 8) + (data[1] & 0xff)) / 10.0);
 	/* IgnDwell: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
-	IgnDwell = (data[2] << 8) + (data[3] & 0xff);
+	IgnDwell.SetValue(((data[2] << 8) + (data[3] & 0xff)) / 10.0);
 	/* Pri_InjAngle: start-bit 32, length 16, endianess intel, scaling 0.1, offset 0 */
-	Pri_InjAngle = (data[4] << 8) + (data[5] & 0xff);
+	Pri_InjAngle.SetValue(((data[4] << 8) + (data[5] & 0xff)) / 10.0);
 	/* Pri_InjPw: start-bit 48, length 16, endianess intel, scaling 0.1, offset 0 */
-	Pri_InjPw = (data[6] << 8) + (data[7] & 0xff);
+	Pri_InjPw.SetValue(((data[6] << 8) + (data[7] & 0xff)) / 10.0);
 	return 0;
 }
 
@@ -66,16 +61,16 @@ int ME_CAN::unpack_can_0x303_ME1_4(byte data[], uint8_t dlc) {
 	assert(dlc <= 8);
 	if (dlc < 8)
 		return -1;
-	/* Sec_InjAngle: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
-	Sec_InjAngle = (data[2] << 8) + (data[3] & 0xff);
-	/* Sec_InjPw: start-bit 32, length 16, endianess intel, scaling 0.1, offset 0 */
-	Sec_InjPw = (data[4] << 8) + (data[5] & 0xff);
 	/* Pri_InjDuty: start-bit 0, length 8, endianess intel, scaling 0.5, offset 0 */
-	Pri_InjDuty = data[0] & 0xff;
+	Pri_InjDuty.SetValue((data[0] & 0xff) * 0.5);
 	/* Sec_InjDuty: start-bit 8, length 8, endianess intel, scaling 0.5, offset 0 */
-	Sec_InjDuty = data[1] & 0xff;
+	Sec_InjDuty.SetValue((data[1] & 0xff) * 0.5);
+	/* Sec_InjAngle: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
+	Sec_InjAngle.SetValue(((data[2] << 8) + (data[3] & 0xff)) / 10.0);
+	/* Sec_InjPw: start-bit 32, length 16, endianess intel, scaling 0.1, offset 0 */
+	Sec_InjPw.SetValue(((data[4] << 8) + (data[5] & 0xff)) / 10.0);
 	/* Boost_Ctrl_Duty: start-bit 48, length 8, endianess intel, scaling 0.5, offset 0 */
-	Boost_Ctrl_Duty = data[6] & 0xff;
+	Boost_Ctrl_Duty.SetValue((data[6] & 0xff) * 0.5);
 	return 0; 
 }
 
@@ -84,13 +79,14 @@ int ME_CAN::unpack_can_0x304_ME1_5(byte data[], uint8_t dlc) {
 	assert(dlc <= 8);
 	if (dlc < 8)
 		return -1;
-	Oil_T = (data[0] << 8) + (data[1] & 0xff);
+	/* Oil_T: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
+	Oil_TEMP.SetValue((data[0] << 8) + (data[1] & 0xff) / 10.0);
 	/* Oil_P: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
-	Oil_P = (data[2] << 8) + (data[3] & 0xff);
+	Oil_PRESS.SetValue((data[2] << 8) + (data[3] & 0xff) / 10.0);
 	/* CLT: start-bit 32, length 16, endianess intel, scaling 0.1, offset 0 */
-	CLT = (data[4] << 8) + (data[5] & 0xff);
+	COOL_TEMP.SetValue((data[4] << 8) + (data[5] & 0xff) / 10.0);
 	/* VBAT: start-bit 48, length 16, endianess intel, scaling 0.1, offset 0 */
-	VBAT = (data[6] << 8) + (data[7] & 0xff);
+	VBAT.SetValue((data[6] << 8) + (data[7] & 0xff) / 10.0);
 	return 0;
 }
 
@@ -99,14 +95,15 @@ int ME_CAN::unpack_can_0x305_ME1_6(byte data[], uint8_t dlc) {
 	assert(dlc <= 8);
 	if (dlc < 8)
 		return -1;
-	/* MAP_Target: start-bit 8, length 16, endianess intel, scaling 0.01, offset 0 */
-	MAP_Target = (data[1] << 8) + (data[2] & 0xff);
-	/* Vehicle_Speed: start-bit 24, length 16, endianess intel, scaling 0.008, offset 0 */
-	Vehicle_Speed = (data[3] << 8) + (data[4] & 0xff);
-	/* EPS_Ev_Msk: start-bit 40, length 16, endianess intel, scaling 1, offset 0 */
-	EPS_Ev_Msk = (data[5] << 8) + (data[6] & 0xff);
 	/* Gear_Pos: start-bit 0, length 8, endianess intel, scaling 1, offset 0 */
-	Gear_Pos = data[0] & 0xff;
+	Gear_Pos.SetValue(data[0] & 0xff);
+	/* MAP_Target: start-bit 8, length 16, endianess intel, scaling 0.01, offset 0 */
+	MAP_Target.SetValue((data[1] << 8) + (data[2] & 0xff) / 100.0);
+	/* Vehicle_Speed: start-bit 24, length 16, endianess intel, scaling 0.008, offset 0 */
+	Vehicle_Speed.SetValue((data[3] << 8) + (data[4] & 0xff)  * 0.008);
+	/* EPS_Ev_Msk: start-bit 40, length 16, endianess intel, scaling 1, offset 0 */
+	EPS_Ev_Msk.SetValue((data[5] << 8) + (data[6] & 0xff));
+
 	return 0;
 }
 
@@ -116,15 +113,16 @@ int ME_CAN::unpack_can_0x306_ME1_7(byte data[], uint8_t dlc) {
 	if (dlc < 8)
 		return -1;
 	/* Knock_Reading: start-bit 0, length 16, endianess intel, scaling 1, offset 0 */
-	Knock_Reading = (data[0] << 8) + (data[1] & 0xff);
-	/* EGT_1: start-bit 40, length 16, endianess intel, scaling 0.1, offset 0 */
-	EGT_1 = (data[5] << 8) + (data[6] & 0xff);
+	Knock_Reading.SetValue((data[0] << 8) + (data[1] & 0xff));
 	/* Knock_Ign_Adv_Mod: start-bit 16, length 8, endianess intel, scaling 0.1, offset 0 */
-	Knock_Ign_Adv_Mod = data[2] & 0xff;;
+	Knock_Ign_Adv_Mod.SetValue((data[2] & 0xff) * 0.1);
 	/* Fuel_Press: start-bit 24, length 8, endianess intel, scaling 5, offset 0 */
-	Fuel_Press = data[3] & 0xff;
+	Fuel_Press.SetValue((data[3] & 0xff) * 5);
 	/* Fuel_Temp: start-bit 32, length 8, endianess intel, scaling 1, offset 0 */
-	Fuel_Temp = data[4] & 0xff;
+	Fuel_Temp.SetValue(data[4] & 0xff);
+	/* EGT_1: start-bit 40, length 16, endianess intel, scaling 0.1, offset 0 */
+	EGT_1.SetValue((data[5] << 8) + (data[6] & 0xff) / 10.0);
+	
 	return 0;
 }
 
@@ -134,11 +132,11 @@ int ME_CAN::unpack_can_0x307_ME1_8(byte data[], uint8_t dlc) {
 	if (dlc < 8)
 		return -1;
 	/* EGT_2: start-bit 0, length 16, endianess intel, scaling 0.1, offset 0 */
-	EGT_2 = (data[0] << 8) + (data[1] & 0xff);
+	EGT_2.SetValue((data[0] << 8) + (data[1] & 0xff) / 10.0);
 	/* GPT_1: start-bit 16, length 16, endianess intel, scaling 1, offset 0 */
-	GPT_1 = (data[2] << 8) + (data[3] & 0xff);
+	GPT_1.SetValue((data[2] << 8) + (data[3] & 0xff));
 	/* GPT_2: start-bit 32, length 16, endianess intel, scaling 1, offset 0 */
-	GPT_2 = (data[4] << 8) + (data[5] & 0xff);
+	GPT_2.SetValue((data[4] << 8) + (data[5] & 0xff));
 
 	return 0;
 }
@@ -149,7 +147,7 @@ int ME_CAN::unpack_can_0x340_ME1_In_1(byte data[], uint8_t dlc) {
 	if (dlc < 8)
 		return -1;
 	/* Vehicle_Speed: start-bit 0, length 16, endianess intel, scaling 0.008, offset 0 */
-	Vehicle_Speed = (data[0] << 8) + (data[1] & 0xff);
+	Vehicle_Speed_2.SetValue((data[0] << 8) + (data[1] & 0xff) * 0.008);
 	
 	return 0;
 }
