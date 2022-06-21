@@ -1,4 +1,4 @@
-#include "ME_CAN.h"
+#include <ME_CAN.h>
 
 ME_CAN ME_can;
 int id = 768;
@@ -7,6 +7,7 @@ byte data[8];
 void setup()
 {
     Serial.begin(9600);
+    randomSeed(analogRead(0));
 }
 
 // the loop function runs over and over again forever
@@ -22,7 +23,7 @@ void loop()
     data[7] = random(1000);
     if (ME_can.unpack_message(id, data, 8) < 0)
     {
-        Serial.println(ME_can.RPM);
+        Serial.println(String(ME_can.RPM.GetValue()));
     }
     
     delay(100); 
