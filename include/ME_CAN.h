@@ -11,18 +11,28 @@ class SensorData {
 
 		}
 		bool Updated = true;
+
 		T GetValue(){
 			Updated = false;
 			return _value;
+		}	
+		T GetMaxValue(){
+			Updated = false;
+			return _max;
 		}
 		void SetValue(T value){
 			_value = value;
+			if(value > _max ){
+				_max = value;
+			}
 			Updated = true;
 		}
+
 		String Unit = "";
 		String Name = "";
 	private: 
 		T _value;
+		T _max;
 };
 class ME_CAN
 {
