@@ -23,7 +23,11 @@ class SensorData {
 		void SetValue(T value){
 			_value = value;
 			if(value > _max ){
+<<<<<<< HEAD
 				_max = value;
+=======
+				_max = value
+>>>>>>> 019c3ff9d8c930c61a78978083ed55bd418c405c
 			}
 			Updated = true;
 		}
